@@ -1,11 +1,15 @@
 from flask import Flask, render_template, request
 import pickle
 import numpy as np
+import os  # Needed to safely handle paths
 
 app = Flask(__name__)
 
+# Get absolute path to the model file
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "model", "titanic_survival_model.pkl")
+
 # Load the trained model and scaler
-with open("model/titanic_survival_model.pkl", "rb") as f:
+with open(MODEL_PATH, "rb") as f:
     model, scaler = pickle.load(f)
 
 @app.route("/", methods=["GET", "POST"])
@@ -31,4 +35,4 @@ def home():
     return render_template("index.html", prediction=prediction)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
